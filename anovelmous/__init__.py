@@ -55,4 +55,5 @@ manager.create_api(Chapter)
 manager.create_api(User, primary_key='username', exclude_columns=['password'])
 manager.create_api(Vote, methods=['GET', 'POST'])
 
-app.run()
+if __name__ == '__main__':
+    app.run()
