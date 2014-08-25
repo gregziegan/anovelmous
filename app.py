@@ -2,11 +2,9 @@ from flask import Flask, url_for, redirect, g, abort, render_template
 from flask_sqlalchemy import SQLAlchemy
 import flask_restless
 
-from config import get_db_uri
-
 app = Flask(__name__)
-app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri()
+app.config.from_object("config")
+app.config.from_envvar("ANOVELMOUS_SETTINGS")
 db = SQLAlchemy(app)
 
 
@@ -56,6 +54,5 @@ manager.create_api(Novel)
 manager.create_api(Chapter)
 manager.create_api(User, primary_key='username', exclude_columns=['password'])
 manager.create_api(Vote, methods=['GET', 'POST'])
-
 
 app.run()

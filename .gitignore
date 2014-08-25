@@ -3,3 +3,5 @@
 .DS_Store
 config.py
 .idea
+fabfile.py
+*.cfg
