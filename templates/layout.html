@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.min.css') }}">
+    <title>{% block title %}Anovelmous{% endblock %}</title>
+  </head>
+  <body>
+    <div class="row">
+      <article class="large-12">
+        {% block content %}{% endblock %}
+      </article>
+    </div>
+
+  <script type="text/javascript" src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
+  <script type="text/javascript">
+    {% block javascript %}
+    {% endblock %}
+  </script>
+  </body>
+</html>
