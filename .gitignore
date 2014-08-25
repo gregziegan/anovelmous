@@ -5,3 +5,4 @@ config.py
 .idea
 fabfile.py
 *.cfg
+index.py
