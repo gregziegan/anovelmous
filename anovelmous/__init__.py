@@ -2,6 +2,8 @@ from flask import Flask, url_for, redirect, g, abort, render_template
 from flask_sqlalchemy import SQLAlchemy
 import flask_restless
 
+import datetime
+
 app = Flask(__name__)
 app.config.from_object("config")
 app.config.from_envvar("ANOVELMOUS_SETTINGS")
@@ -13,12 +15,22 @@ class Novel(db.Model):
     name = db.Column(db.Unicode, unique=True, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
 
+    def __init__(self, name=None):
+        self.name = name
+        self.created_at = datetime.datetime.utcnow()
+
 
 class Chapter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Unicode, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False)
     novel_id = db.Column(db.Integer, db.ForeignKey('novel.id'), nullable=False)
     novel = db.relationship('Novel', backref=db.backref('chapters', lazy='dynamic'))
+
+    def __init__(self, name=None, novel_id=None):
+        self.name = name
+        self.created_at = datetime.datetime.utcnow()
+        self.novel_id = novel_id
 
 
 class User(db.Model):
@@ -49,9 +61,24 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/read-novel/<novel_name>')
+def read_novel(novel_name):
+    novel = Novel.query.filter_by(name=novel_name).first()
+    most_recent_chapter = Chapter.query.filter_by(novel_id=novel.id)\
+        .order_by(Chapter.created_at).first()
+    chapter_content = Vote.query.filter_by(chapter_id=most_recent_chapter.id).all()
+
+    template_variables = {
+        'novel': novel,
+        'most_recent_chapter': most_recent_chapter,
+        'chapter_content': chapter_content
+    }
+    return render_template('read_novel.html', **template_variables)
+
+
 manager = flask_restless.APIManager(app, flask_sqlalchemy_db=db)
-manager.create_api(Novel)
-manager.create_api(Chapter)
+manager.create_api(Novel, methods=['GET', 'POST'])
+manager.create_api(Chapter, methods=['GET', 'POST'])
 manager.create_api(User, primary_key='username', exclude_columns=['password'])
 manager.create_api(Vote, methods=['GET', 'POST'])
 
