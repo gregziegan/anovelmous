@@ -3,5 +3,21 @@
 {% block title %}Anovelmous | Homepage{% endblock %}
 
 {% block content %}
-  <p>The Anovelmous App</p>
+
+<div class="row">
+  <h1><strong>Anovelmous</strong></h1>
+</div>
+<div class="row">
+  <h1><small>Let's Write Together</small></h1>
+</div>
+    <br>
+<div class="row">
+  <div class="small-6 large-4">
+    <ul class="stack button-group">
+      <li><a href="{{ url_for('read_novel', novel_name=current_novel.name) }}" class="button">Read Current Novel!</a></li>
+      <li><a href="{{ url_for('browse_novels') }}" class="button">Browse Novels</a></li>
+    </ul>
+  </div>
+</div>
+
 {% endblock %}

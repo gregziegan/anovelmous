@@ -5,9 +5,16 @@
   </head>
   <body>
     <div class="row">
-      <article class="large-12">
+      <div class="small-12 large-10 column">
+        <ul id="site-nav-breadcrumb" class="breadcrumbs">
+          <li><a href="{{ url_for('index') }}">Home</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 large-10 column">
         {% block content %}{% endblock %}
-      </article>
+      </div>
     </div>
 
   <script type="text/javascript" src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>

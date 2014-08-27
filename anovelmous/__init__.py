@@ -58,7 +58,14 @@ db.create_all()
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    current_novel = Novel.query.all()[-1]
+    return render_template('index.html', current_novel=current_novel)
+
+
+@app.route('/browse')
+def browse_novels():
+    novels = Novel.query.all()
+    return render_template('browse_novels.html', novels=novels)
 
 
 @app.route('/read-novel/<novel_name>')
@@ -66,6 +73,8 @@ def read_novel(novel_name):
     novel = Novel.query.filter_by(name=novel_name).first()
     most_recent_chapter = Chapter.query.filter_by(novel_id=novel.id)\
         .order_by(Chapter.created_at).first()
+    if not most_recent_chapter:
+        abort(404)
     chapter_content = Vote.query.filter_by(chapter_id=most_recent_chapter.id).all()
 
     template_variables = {

@@ -1,6 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block title %}{{ novel.name }}{% endblock %}
+
 {% block content %}
-    <h1>Novel: {{ novel.name }}</h1>
+    <h1>{{ novel.name }}</h1>
 
     <h3>{{ most_recent_chapter.name }}</h3>
-    <p>{{ chapter_content }}</p>
+    <textarea disabled="disabled">
+      {% if chapter_content|length > 0 %}
+        {{ chapter_content|join(' ') }}
+      {% else %}
+        This chapter is empty!
+      {% endif %}
+    </textarea>
+{% endblock %}
+
+{% block javascript %}
+var breadcrumb_html = '<li><a href="{{ url_for('browse_novels') }}">Browse Novels</a></li><li class="current">\
+                      <a href="{{ url_for('read_novel', novel_name=novel.name) }}">{{ novel.name }}</a></li>';
+$('#site-nav-breadcrumb').append(breadcrumb_html)
 {% endblock %}
