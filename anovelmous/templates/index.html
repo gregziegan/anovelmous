@@ -14,8 +14,10 @@
 <div class="row">
   <div class="small-6 large-4">
     <ul class="stack button-group">
+      {% if current_novel %}
       <li><a href="{{ url_for('read_novel', novel_name=current_novel.name) }}" class="button">Read Current Novel!</a></li>
       <li><a href="{{ url_for('browse_novels') }}" class="button">Browse Novels</a></li>
+      {% endif %}
     </ul>
   </div>
 </div>

@@ -58,7 +58,9 @@ db.create_all()
 
 @app.route('/')
 def index():
-    current_novel = Novel.query.all()[-1]
+
+    novels = Novel.query.all()
+    current_novel = novels[-1] if novels else None
     return render_template('index.html', current_novel=current_novel)
 
 
