@@ -41,6 +41,12 @@ class User(db.Model):
     password = db.Column(db.String, nullable=False)
     is_active = db.Column(db.Boolean, nullable=False)
 
+    def __init__(self, username=None, first_name=None, last_name=None, password=None, is_active=True):
+        self.username = username
+        self.first_name = first_name
+        self.last_name = last_name
+        self.password = password
+        self.is_active = is_active
 
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -53,12 +59,8 @@ class Vote(db.Model):
     user = db.relationship('User', backref=db.backref('votes', lazy='dynamic'))
 
 
-db.create_all()
-
-
 @app.route('/')
 def index():
-
     novels = Novel.query.all()
     current_novel = novels[-1] if novels else None
     return render_template('index.html', current_novel=current_novel)
@@ -90,8 +92,9 @@ def read_novel(novel_name):
 manager = flask_restless.APIManager(app, flask_sqlalchemy_db=db)
 manager.create_api(Novel, methods=['GET', 'POST'])
 manager.create_api(Chapter, methods=['GET', 'POST'])
-manager.create_api(User, primary_key='username', exclude_columns=['password'])
+manager.create_api(User, exclude_columns=['is_active', 'password'], methods=['GET', 'POST'])
 manager.create_api(Vote, methods=['GET', 'POST'])
 
 if __name__ == '__main__':
+    db.create_all()
     app.run()
