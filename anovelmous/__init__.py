@@ -131,4 +131,7 @@ manager.create_api(StoryToken, methods=['GET', 'POST'])
 
 
 db.create_all()
-app.run()
+
+
+if __name__ == '__main__':
+    app.run()
