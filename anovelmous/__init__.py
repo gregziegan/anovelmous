@@ -130,6 +130,5 @@ manager.create_api(Vote, methods=['GET', 'POST'])
 manager.create_api(StoryToken, methods=['GET', 'POST'])
 
 
-if __name__ == '__main__':
-    db.create_all()
-    app.run()
+db.create_all()
+app.run()
