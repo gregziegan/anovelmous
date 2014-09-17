@@ -8,7 +8,7 @@
     <h3>{{ most_recent_chapter.name }}</h3>
     <textarea disabled="disabled">
       {% if chapter_content|length > 0 %}
-        {% for token in chapter_content %}{{ token.word }} {% endfor %}
+        {% for token in chapter_content %}{{ token.token }} {% endfor %}
       {% else %}
         This chapter is empty!
       {% endif %}
