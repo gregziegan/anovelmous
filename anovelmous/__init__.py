@@ -7,6 +7,30 @@ app.config.from_object("config")
 app.config.from_envvar("ANOVELMOUS_SETTINGS")
 
 
+ADMINS = ['greg.ziegan@gmail.com']
+if not app.debug:
+    import logging
+    from logging.handlers import SMTPHandler
+    mail_handler = SMTPHandler('127.0.0.1',
+                               'server-error@anovelmous.com',
+                               ADMINS, 'Anovelmous received an Exception')
+    mail_handler.setLevel(logging.ERROR)
+    app.logger.addHandler(mail_handler)
+
+    from logging import Formatter
+    mail_handler.setFormatter(Formatter('''
+    Message type:       %(levelname)s
+    Location:           %(pathname)s:%(lineno)d
+    Module:             %(module)s
+    Function:           %(funcName)s
+    Time:               %(asctime)s
+
+    Message:
+
+    %(message)s
+    '''))
+
+
 @app.route('/')
 def index():
     novels = Novel.query.all()
