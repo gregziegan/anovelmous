@@ -54,7 +54,6 @@ class Vote(db.Model):
     ordinal = db.Column(db.Integer, nullable=False)
     selected = db.Column(db.Boolean, nullable=False)
     chapter_id = db.Column(db.Integer, db.ForeignKey('chapter.id'), nullable=False)
-    chapter = db.relationship('Chapter', backref=db.backref('content', lazy='dynamic'))
     username = db.Column(db.Unicode, nullable=False)
     user_id = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
@@ -77,6 +76,7 @@ class StoryToken(db.Model):
     is_punctuation = db.Column(db.Boolean, nullable=False)
     ordinal = db.Column(db.Integer, nullable=False)
     chapter_id = db.Column(db.Integer, db.ForeignKey('chapter.id'), nullable=False)
+    chapter = db.relationship('Chapter', backref=db.backref('content', lazy='dynamic'))
     created_at = db.Column(db.DateTime, nullable=False)
 
     def __init__(self, token, is_punctuation, ordinal, chapter_id):

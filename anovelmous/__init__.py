@@ -42,7 +42,7 @@ manager.create_api(Novel, methods=['GET', 'POST'])
 manager.create_api(Chapter, methods=['GET', 'POST'])
 manager.create_api(User, primary_key='username', exclude_columns=['is_active', 'password'], methods=['GET', 'POST'])
 manager.create_api(Vote, methods=['GET', 'POST'])
-manager.create_api(StoryToken, methods=['GET', 'POST'])
+manager.create_api(StoryToken, methods=['GET', 'POST'], allow_functions=True)
 
 
 if __name__ == '__main__':
