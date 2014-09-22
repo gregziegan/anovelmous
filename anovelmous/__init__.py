@@ -6,14 +6,15 @@ app = Flask(__name__)
 app.config.from_object("config")
 app.config.from_envvar("ANOVELMOUS_SETTINGS")
 
-
+EMAIL_USER, EMAIL_PASSWD = app.config['EMAIL_USER'], app.config['EMAIL_PASSWD']
 ADMINS = ['greg.ziegan@gmail.com']
 if not app.debug:
     import logging
     from logging.handlers import SMTPHandler
     mail_handler = SMTPHandler('127.0.0.1',
                                'server-error@anovelmous.com',
-                               ADMINS, 'Anovelmous received an Exception')
+                               ADMINS, 'Anovelmous received an Exception',
+                               credentials=(EMAIL_USER, EMAIL_PASSWD))
     mail_handler.setLevel(logging.ERROR)
     app.logger.addHandler(mail_handler)
 
