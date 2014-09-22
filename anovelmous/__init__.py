@@ -9,10 +9,7 @@ app.config.from_object("config")
 app.config.from_envvar("ANOVELMOUS_SETTINGS")
 
 if not app.debug:
-    MAIL_USERNAME = app.config['EMAIL_USER']
-    MAIL_PASSWORD = app.config['EMAIL_PASSWD']
     mail = Mail(app)
-
     ADMINS = ['greg.ziegan@gmail.com']
     mail_on_500(app, ADMINS, sender="server-error@anovelmous.com")
 
