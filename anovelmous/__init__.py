@@ -4,6 +4,8 @@ from flask_errormail import mail_on_500
 import flask_restless
 from models import db, Novel, Chapter, Vote, StoryToken, User
 
+# Currently abandoned branch due to deployment issues: to picked up when further on dev.
+
 app = Flask(__name__)
 app.config.from_object("config")
 app.config.from_envvar("ANOVELMOUS_SETTINGS")
