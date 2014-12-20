@@ -1,17 +1,10 @@
 from flask import Flask, url_for, redirect, g, abort, render_template
-from flask_mail import Mail
-from flask_errormail import mail_on_500
 import flask_restless
 from models import db, Novel, Chapter, Vote, StoryToken, User
 
 app = Flask(__name__)
 app.config.from_object("config")
 app.config.from_envvar("ANOVELMOUS_SETTINGS")
-
-if not app.debug:
-    mail = Mail(app)
-    ADMINS = ['greg.ziegan@gmail.com']
-    mail_on_500(app, ADMINS, sender="server-error@anovelmous.com")
 
 
 @app.route('/')
