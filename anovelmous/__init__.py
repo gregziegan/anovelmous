@@ -5,6 +5,12 @@ from models import db, Novel, Chapter, Vote, StoryToken, User
 app = Flask(__name__)
 app.config.from_envvar("ANOVELMOUS_SETTINGS")
 
+@app.before_first_request
+def initialize_database():
+    if not app.debug:
+        db.init_app(app)
+    db.create_all()
+
 
 @app.route('/')
 def index():
@@ -45,7 +51,4 @@ manager.create_api(StoryToken, methods=['GET', 'POST'], allow_functions=True)
 
 
 if __name__ == '__main__':
-    db.init_app(app)
-    with app.app_context():
-        db.create_all()
     app.run()
