@@ -3,27 +3,18 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.min.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fonts/foundation-icons.css') }}">
     <title>{% block title %}Anovelmous{% endblock %}</title>
+    {% block css %}{% endblock %}
   </head>
   <body>
-    <div class="row">
-      <div class="small-12 large-10 column">
-        <ul id="site-nav-breadcrumb" class="breadcrumbs">
-          <li><a href="{{ url_for('index') }}">Home</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="row">
-      <div class="small-12 large-10 column">
-        {% block content %}{% endblock %}
-      </div>
-    </div>
+  {% block content %}{% endblock %}
 
   <script type="text/javascript" src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
   <script type="text/javascript">
-    {% block javascript %}
-    {% endblock %}
+    $(document).foundation();
   </script>
+  {% block javascript %}{% endblock %}
   </body>
 </html>
