@@ -6,3 +6,5 @@ config.py
 fabfile.py
 *.cfg
 index.py
+development.cfg
+production.cfg

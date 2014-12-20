@@ -3,7 +3,6 @@ import flask_restless
 from models import db, Novel, Chapter, Vote, StoryToken, User
 
 app = Flask(__name__)
-app.config.from_object("config")
 app.config.from_envvar("ANOVELMOUS_SETTINGS")
 
 
