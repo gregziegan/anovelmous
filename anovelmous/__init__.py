@@ -17,9 +17,11 @@ def index():
     current_novel = Novel.query.order_by('-id').first()
     current_chapter = Chapter.query.order_by('-id').first()
     current_chapter_tokens = []
+    novel_chapters = Chapter.query.order_by('id').all()
     if current_chapter:
         current_chapter_tokens = StoryToken.query.filter_by(chapter_id=current_chapter.id).all()
-    return render_template('index.html', current_novel=current_novel, current_chapter_tokens=current_chapter_tokens)
+    return render_template('index.html', current_novel=current_novel, novel_chapters=novel_chapters,
+                           current_chapter_tokens=current_chapter_tokens)
 
 
 @app.route('/browse')
