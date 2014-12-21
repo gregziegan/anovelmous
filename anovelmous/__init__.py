@@ -1,9 +1,10 @@
-from flask import Flask, url_for, redirect, g, abort, render_template
+from flask import Flask, url_for, redirect, g, abort, render_template, request, jsonify
 import flask_restless
-from models import db, Novel, Chapter, Vote, StoryToken, User
+from models import db, Novel, Chapter, Vote, NovelToken, User, Token
 
 app = Flask(__name__)
 app.config.from_envvar("ANOVELMOUS_SETTINGS")
+
 
 @app.before_first_request
 def initialize_database():
@@ -19,7 +20,7 @@ def index():
     current_chapter_tokens = []
     novel_chapters = Chapter.query.order_by('id').all()
     if current_chapter:
-        current_chapter_tokens = StoryToken.query.filter_by(chapter_id=current_chapter.id).all()
+        current_chapter_tokens = NovelToken.query.filter_by(chapter_id=current_chapter.id).all()
     return render_template('index.html', current_novel=current_novel, novel_chapters=novel_chapters,
                            current_chapter_tokens=current_chapter_tokens)
 
@@ -37,7 +38,7 @@ def read_novel(novel_name):
         .order_by(Chapter.created_at).first()
     if not most_recent_chapter:
         abort(404)
-    chapter_content = StoryToken.query.filter_by(chapter_id=most_recent_chapter.id).all()
+    chapter_content = NovelToken.query.filter_by(chapter_id=most_recent_chapter.id).all()
 
     template_variables = {
         'novel': novel,
@@ -52,8 +53,24 @@ manager.create_api(Novel, methods=['GET', 'POST'])
 manager.create_api(Chapter, methods=['GET', 'POST'])
 manager.create_api(User, primary_key='username', exclude_columns=['is_active', 'password'], methods=['GET', 'POST'])
 manager.create_api(Vote, methods=['GET', 'POST'])
-manager.create_api(StoryToken, methods=['GET', 'POST'], allow_functions=True)
+manager.create_api(Token, methods=['GET', 'POST'])
+manager.create_api(NovelToken, methods=['GET', 'POST'], allow_functions=True)
 
+
+@app.route('/api/bulk-add-to-vocabulary', methods=['POST'])
+def add_to_vocabulary():
+    words = request.json['words']
+    words = [word.lower() for word in words]
+
+    if len(set(words)) != len(words):
+        return jsonify({'message': "All words must be unique."})
+
+    for word in words:
+        token = Token(word)
+        db.session.add(token)
+
+    db.session.commit()
+    return jsonify({'message': "All words added successfully."})
 
 if __name__ == '__main__':
     if app.debug:

@@ -70,10 +70,20 @@ class Vote(db.Model):
         self.created_at = datetime.datetime.utcnow()
 
 
-class StoryToken(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    token = db.Column(db.Unicode, nullable=False)
+class Token(db.Model):
+    content = db.Column(db.Unicode, primary_key=True)
     is_punctuation = db.Column(db.Boolean, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False)
+
+    def __init__(self, content):
+        self.content = content
+        self.is_punctuation = True if content in string.punctuation else False
+        self.created_at = datetime.datetime.now()
+
+
+class NovelToken(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    token = db.Column(db.Unicode, db.ForeignKey('token.content'), nullable=False)
     ordinal = db.Column(db.Integer, nullable=False)
     chapter_id = db.Column(db.Integer, db.ForeignKey('chapter.id'), nullable=False)
     chapter = db.relationship('Chapter', backref=db.backref('content', lazy='dynamic'))
@@ -81,7 +91,6 @@ class StoryToken(db.Model):
 
     def __init__(self, token, ordinal, chapter_id):
         self.token = token
-        self.is_punctuation = True if token in string.punctuation else False
         self.ordinal = ordinal
         self.chapter_id = chapter_id
         self.created_at = datetime.datetime.utcnow()

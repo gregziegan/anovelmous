@@ -14,6 +14,6 @@ GET /vote
 
 GET /vote/1
 
-GET /story_token
+GET /novel_token
 
-GET /story_token/1
+GET /novel_token/1

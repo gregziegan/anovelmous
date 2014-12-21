@@ -23,6 +23,6 @@ for WORD in $(cat ./huck_finn.txt); do
         continue
     fi
 
-    POST /story_token "{\"token\": \"$WORD\", \"ordinal\": $index, \"chapter_id\": $current_chapter_id}"
+    POST /novel_token "{\"token\": \"$WORD\", \"ordinal\": $index, \"chapter_id\": $current_chapter_id}"
     let index=index+1
 done
