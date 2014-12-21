@@ -25,9 +25,11 @@
 
       <section class="main-section">
         {% if current_chapter_tokens %}
-        {% for token in current_chapter_tokens %}
-          {{ token }}
+          <p>
+        {% for story_token in current_chapter_tokens %}
+          {{ story_token.token }}
         {% endfor %}
+          </p>
         {% else %}
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut

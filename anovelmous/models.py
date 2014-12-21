@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKeyConstraint
-
+import string
 import datetime
 
 db = SQLAlchemy()
@@ -79,9 +79,9 @@ class StoryToken(db.Model):
     chapter = db.relationship('Chapter', backref=db.backref('content', lazy='dynamic'))
     created_at = db.Column(db.DateTime, nullable=False)
 
-    def __init__(self, token, is_punctuation, ordinal, chapter_id):
+    def __init__(self, token, ordinal, chapter_id):
         self.token = token
-        self.is_punctuation = is_punctuation
+        self.is_punctuation = True if token in string.punctuation else False
         self.ordinal = ordinal
         self.chapter_id = chapter_id
         self.created_at = datetime.datetime.utcnow()
