@@ -16,7 +16,9 @@ def initialize_database():
 def index():
     current_novel = Novel.query.order_by('-id').first()
     current_chapter = Chapter.query.order_by('-id').first()
-    current_chapter_tokens = StoryToken.query.filter_by(chapter_id=current_chapter.id).all()
+    current_chapter_tokens = []
+    if current_chapter:
+        current_chapter_tokens = StoryToken.query.filter_by(chapter_id=current_chapter.id).all()
     return render_template('index.html', current_novel=current_novel, current_chapter_tokens=current_chapter_tokens)
 
 

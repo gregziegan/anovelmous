@@ -50,7 +50,7 @@ class User(db.Model):
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     token = db.Column(db.Unicode, nullable=False)
-    is_punctuation = db.Column(db.Boolean ,nullable=False)
+    is_punctuation = db.Column(db.Boolean, nullable=False)
     ordinal = db.Column(db.Integer, nullable=False)
     selected = db.Column(db.Boolean, nullable=False)
     chapter_id = db.Column(db.Integer, db.ForeignKey('chapter.id'), nullable=False)
