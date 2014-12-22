@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div class="large-12">
+<div class="large-12 medium-12 small-12 columns">
   <div class="off-canvas-wrap" data-offcanvas>
     <div class="inner-wrap">
       <nav class="tab-bar">
@@ -44,6 +44,13 @@
         {% endfor %}
           </p>
         {% endif %}
+        <div class="large-10 medium-10 small-8 columns">
+          <div class="row">
+            <form>
+              <input id="vote" type="search">
+            </form>
+          </div>
+        </div>
       </section>
 
     <a class="exit-off-canvas"></a>
@@ -52,4 +59,26 @@
   </div>
 </div>
 
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+
+  $(document).ready(function () {
+    check_for_new_vote_suggestions();
+  });
+
+  function check_for_new_vote_suggestions() {
+    $.getJSON('api/token?results_per_page=10000').done(function (available_tokens) {
+      populate_suggestions(available_tokens)
+    });
+  }
+
+  function populate_suggestions(available_tokens) {
+    console.log(available_tokens);
+    $('#vote').autocomplete({
+      source: available_tokens
+    });
+  }
+</script>
 {% endblock %}

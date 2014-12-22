@@ -48,12 +48,26 @@ def read_novel(novel_name):
     return render_template('read_novel.html', **template_variables)
 
 
+def get_tokens_postprocessor(result=None, search_params=None, **kw):
+    """Accepts two arguments, `result`, which is the dictionary
+    representation of the JSON response which will be returned to the
+    client, and `search_params`, which is a dictionary containing the
+    search parameters for the request (that produced the specified
+    `result`).
+
+    """
+    result['words'] = [token['content'] for token in result['objects']]
+    del result['objects']
+
+
 manager = flask_restless.APIManager(app, flask_sqlalchemy_db=db)
 manager.create_api(Novel, methods=['GET', 'POST'])
 manager.create_api(Chapter, methods=['GET', 'POST'])
 manager.create_api(User, primary_key='username', exclude_columns=['is_active', 'password'], methods=['GET', 'POST'])
 manager.create_api(Vote, methods=['GET', 'POST'])
-manager.create_api(Token, methods=['GET', 'POST'])
+manager.create_api(Token, methods=['GET', 'POST'], exclude_columns=['created_at'],
+                   postprocessors={'GET_MANY': [get_tokens_postprocessor]},
+                   max_results_per_page=-1)
 manager.create_api(NovelToken, methods=['GET', 'POST'], allow_functions=True)
 
 
