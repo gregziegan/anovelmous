@@ -58,10 +58,7 @@ def get_tokens_postprocessor(result=None, search_params=None, **kw):
     `result`).
 
     """
-    if search_params.get('get_full_vocabulary'):
-        result['words'] = sorted([token['content'] for token in result['objects']])
-        del result['objects']
-    elif search_params.get('bit_stream'):
+    if search_params.get('bit_stream'):
         del result['objects']
         tokens = list(Token.query.all())
         random.shuffle(tokens)
@@ -75,8 +72,7 @@ manager.create_api(Chapter, methods=['GET', 'POST'])
 manager.create_api(User, primary_key='username', exclude_columns=['is_active', 'password'], methods=['GET', 'POST'])
 manager.create_api(Vote, methods=['GET', 'POST'])
 manager.create_api(Token, methods=['GET', 'POST'], exclude_columns=['created_at', 'index'],
-                   postprocessors={'GET_MANY': [get_tokens_postprocessor]},
-                   max_results_per_page=-1)
+                   postprocessors={'GET_MANY': [get_tokens_postprocessor]})
 manager.create_api(NovelToken, methods=['GET', 'POST'], allow_functions=True)
 
 

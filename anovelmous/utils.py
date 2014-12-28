@@ -1,5 +1,5 @@
 def substitute_bit_stream(result, available_tokens):
-    available_token_indices = sorted([token.id for token in available_tokens])
+    available_token_indices = [token.id for token in available_tokens]
     bit_stream = []
     last_index = 0
     for token_index in available_token_indices:
