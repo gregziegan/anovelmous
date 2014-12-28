@@ -27,29 +27,6 @@ def index():
                            current_chapter_tokens=current_chapter_tokens)
 
 
-@app.route('/browse')
-def browse_novels():
-    novels = Novel.query.all()
-    return render_template('browse_novels.html', novels=novels)
-
-
-@app.route('/read-novel/<novel_name>')
-def read_novel(novel_name):
-    novel = Novel.query.filter_by(name=novel_name).first()
-    most_recent_chapter = Chapter.query.filter_by(novel_id=novel.id)\
-        .order_by(Chapter.created_at).first()
-    if not most_recent_chapter:
-        abort(404)
-    chapter_content = NovelToken.query.filter_by(chapter_id=most_recent_chapter.id).all()
-
-    template_variables = {
-        'novel': novel,
-        'most_recent_chapter': most_recent_chapter,
-        'chapter_content': chapter_content
-    }
-    return render_template('read_novel.html', **template_variables)
-
-
 def get_tokens_postprocessor(result=None, search_params=None, **kw):
     """Accepts two arguments, `result`, which is the dictionary
     representation of the JSON response which will be returned to the
