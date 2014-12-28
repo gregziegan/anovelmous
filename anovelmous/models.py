@@ -71,7 +71,8 @@ class Vote(db.Model):
 
 
 class Token(db.Model):
-    content = db.Column(db.Unicode, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Unicode, unique=True, nullable=False)
     is_punctuation = db.Column(db.Boolean, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
 

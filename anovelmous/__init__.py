@@ -1,6 +1,8 @@
 from flask import Flask, url_for, redirect, g, abort, render_template, request, jsonify
 import flask_restless
 from models import db, Novel, Chapter, Vote, NovelToken, User, Token
+import utils
+import random
 
 app = Flask(__name__)
 app.config.from_envvar("ANOVELMOUS_SETTINGS")
@@ -56,8 +58,15 @@ def get_tokens_postprocessor(result=None, search_params=None, **kw):
     `result`).
 
     """
-    result['words'] = [token['content'] for token in result['objects']]
-    del result['objects']
+    if search_params.get('get_full_vocabulary'):
+        result['words'] = sorted([token['content'] for token in result['objects']])
+        del result['objects']
+    elif search_params.get('bit_stream'):
+        del result['objects']
+        tokens = list(Token.query.all())
+        random.shuffle(tokens)
+        available_tokens = tokens[:100]  # TODO: temporary until grammar is built
+        utils.substitute_bit_stream(result, available_tokens)
 
 
 manager = flask_restless.APIManager(app, flask_sqlalchemy_db=db)
@@ -65,7 +74,7 @@ manager.create_api(Novel, methods=['GET', 'POST'])
 manager.create_api(Chapter, methods=['GET', 'POST'])
 manager.create_api(User, primary_key='username', exclude_columns=['is_active', 'password'], methods=['GET', 'POST'])
 manager.create_api(Vote, methods=['GET', 'POST'])
-manager.create_api(Token, methods=['GET', 'POST'], exclude_columns=['created_at'],
+manager.create_api(Token, methods=['GET', 'POST'], exclude_columns=['created_at', 'index'],
                    postprocessors={'GET_MANY': [get_tokens_postprocessor]},
                    max_results_per_page=-1)
 manager.create_api(NovelToken, methods=['GET', 'POST'], allow_functions=True)
