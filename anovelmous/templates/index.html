@@ -1,5 +1,11 @@
 {% extends 'layout.html' %}
 
+{% block css %}
+<style type="text/css">
+.ui-helper-hidden-accessible{display:none}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="large-12 medium-12 small-12 columns">
   <div class="off-canvas-wrap" data-offcanvas>
@@ -46,8 +52,8 @@
         {% endif %}
         <div class="large-10 medium-10 small-8 columns">
           <div class="row">
-            <form>
-              <input id="vote" type="search">
+            <form id="vote-form">
+              <input id="vote" type="text">
             </form>
           </div>
         </div>
@@ -65,17 +71,27 @@
 <script type="text/javascript">
 
   $(document).ready(function () {
-    check_for_new_vote_suggestions();
+    $('.ui-autocomplete').addClass('f-dropdown');
+    var full_vocabulary = {{ full_vocabulary|tojson|safe }};
+    populate_suggestions(full_vocabulary);
   });
 
+  function register_vote_submission_event() {
+    $('#vote-form').submit(function (e) {
+      e.preventDefault();
+      $.ajax({
+        url: '{{ url_for('vote') }}'
+      })
+    });
+  }
+
   function check_for_new_vote_suggestions() {
-    $.getJSON('api/token?results_per_page=10000').done(function (available_tokens) {
+    $.getJSON('api/token?').done(function (available_tokens) {
       populate_suggestions(available_tokens)
     });
   }
 
   function populate_suggestions(available_tokens) {
-    console.log(available_tokens);
     $('#vote').autocomplete({
       source: available_tokens
     });

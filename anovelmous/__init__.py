@@ -23,8 +23,26 @@ def index():
     novel_chapters = Chapter.query.order_by('id').all()
     if current_chapter:
         current_chapter_tokens = NovelToken.query.filter_by(chapter_id=current_chapter.id).all()
-    return render_template('index.html', current_novel=current_novel, novel_chapters=novel_chapters,
-                           current_chapter_tokens=current_chapter_tokens)
+
+    full_vocabulary = zip(*list(Token.query.with_entities(Token.content)))[0]
+    template_variables = {
+        'current_novel': current_novel,
+        'novel_chapters': novel_chapters,
+        'current_chapter_tokens': current_chapter_tokens,
+        'full_vocabulary': full_vocabulary[:30]
+    }
+    return render_template('index.html', **template_variables)
+
+
+@app.route('/vote', methods=['POST'])
+def vote():
+    token = request.form['token']
+    novel_id = request.form['novel_id']
+    current_chapter = Chapter.query.filter(novel_id=novel_id).order_by('-id').first()
+    current_novel_token = NovelToken.query.filter_by(chapter_id=current_chapter.id).order_by('-ordinal').first()
+    candidate_ordinal = current_novel_token.ordinal + 1
+
+    NovelToken(token=token, ordinal=candidate_ordinal, chapter_id=current_chapter.id)
 
 
 def get_tokens_postprocessor(result=None, search_params=None, **kw):
