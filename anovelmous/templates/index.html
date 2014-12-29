@@ -52,8 +52,9 @@
         {% endif %}
         <div class="large-10 medium-10 small-8 columns">
           <div class="row">
-            <form id="vote-form">
-              <input id="vote" type="text">
+            <form id="vote-form" method="post" action="{{ url_for('vote', novel_id=current_novel.id) }}">
+              <label for="vote">Vote: </label>
+              <input id="vote" type="text" name="vote">
             </form>
           </div>
         </div>
@@ -74,14 +75,22 @@
     $('.ui-autocomplete').addClass('f-dropdown');
     var full_vocabulary = {{ full_vocabulary|tojson|safe }};
     populate_suggestions(full_vocabulary);
+    register_vote_submission_event();
   });
 
   function register_vote_submission_event() {
     $('#vote-form').submit(function (e) {
       e.preventDefault();
       $.ajax({
-        url: '{{ url_for('vote') }}'
-      })
+        url: $(this).attr('action'),
+        type: 'POST',
+        data: {
+          'token': $('#vote').val()
+        }
+      }).success(function (res) {
+        console.log(res.message);
+      });
+      return false;
     });
   }
 
@@ -93,7 +102,10 @@
 
   function populate_suggestions(available_tokens) {
     $('#vote').autocomplete({
-      source: available_tokens
+      source: function(request, response) {
+        var results = $.ui.autocomplete.filter(available_tokens, request.term);
+        response(results.slice(0,10))
+      }
     });
   }
 </script>
