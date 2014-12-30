@@ -4,6 +4,11 @@
 
 Anovelmous facilitates an anonymous internet community's writing of a novel.
 
+## Documentation
+
+Currently developing our documentation site.
+
+
 ## Installation
 
 To build upon the existing anovelmous API and get a local instance up and running:

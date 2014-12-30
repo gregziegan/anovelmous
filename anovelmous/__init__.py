@@ -3,6 +3,9 @@ import flask_restless
 from models import db, Novel, Chapter, Vote, NovelToken, User, Token
 import utils
 import random
+import pkg_resources
+
+VERSION = pkg_resources.require('anovelmous')[0].version
 
 app = Flask(__name__)
 app.config.from_envvar("ANOVELMOUS_SETTINGS")
@@ -87,6 +90,12 @@ def add_to_vocabulary():
 
     db.session.commit()
     return jsonify({'message': "All words added successfully."})
+
+
+@app.route('/api/metadata')
+def get_api_metadata():
+    return jsonify({'version': VERSION})
+
 
 if __name__ == '__main__':
     if app.debug:
