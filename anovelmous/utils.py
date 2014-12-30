@@ -1,3 +1,6 @@
+from models import NovelToken
+
+
 def substitute_bit_stream(result, available_tokens):
     available_token_indices = [token.id for token in available_tokens]
     bit_stream = []
@@ -14,3 +17,8 @@ def substitute_bit_stream(result, available_tokens):
     bit_stream.extend(trailing_zeroes)
     bit_stream = ''.join(bit_stream)
     result['bit_stream'] = bit_stream
+
+
+def get_candidate_ordinal(chapter_id):
+    current_novel_token = NovelToken.query.filter_by(chapter_id=chapter_id).order_by('-ordinal').first()
+    return current_novel_token.ordinal + 1

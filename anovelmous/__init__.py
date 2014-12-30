@@ -1,6 +1,7 @@
 from flask import Flask, url_for, redirect, g, abort, render_template, request, jsonify
 import flask_restless
 from models import db, Novel, Chapter, Vote, NovelToken, User, Token
+import selection
 import utils
 import random
 import pkg_resources
@@ -41,8 +42,7 @@ def index():
 def vote(novel_id):
     token = request.form['token']
     current_chapter = Chapter.query.filter_by(novel_id=novel_id).order_by('-id').first()
-    current_novel_token = NovelToken.query.filter_by(chapter_id=current_chapter.id).order_by('-ordinal').first()
-    candidate_ordinal = current_novel_token.ordinal + 1
+    candidate_ordinal = utils.get_candidate_ordinal(current_chapter.id)
 
     new_novel_token = NovelToken(token=token, ordinal=candidate_ordinal, chapter_id=current_chapter.id)
     db.session.add(new_novel_token)
@@ -50,7 +50,7 @@ def vote(novel_id):
     return jsonify(message="Successfully voted!")
 
 
-def get_tokens_postprocessor(result=None, search_params=None, **kw):
+def get_many_tokens_postprocessor(result=None, search_params=None, **kwargs):
     """Accepts two arguments, `result`, which is the dictionary
     representation of the JSON response which will be returned to the
     client, and `search_params`, which is a dictionary containing the
@@ -58,6 +58,11 @@ def get_tokens_postprocessor(result=None, search_params=None, **kw):
     `result`).
 
     """
+    if search_params.get('grammatically_correct'):
+        tokens = selection.get_grammatically_correct_subset(result['objects'])
+        result['objects'] = tokens
+        result['num_results'] = len(tokens)
+
     if search_params.get('bit_stream'):
         del result['objects']
         tokens = list(Token.query.all())
@@ -72,7 +77,7 @@ manager.create_api(Chapter, methods=['GET', 'POST'])
 manager.create_api(User, primary_key='username', exclude_columns=['is_active', 'password'], methods=['GET', 'POST'])
 manager.create_api(Vote, methods=['GET', 'POST'])
 manager.create_api(Token, methods=['GET', 'POST'], exclude_columns=['created_at', 'index'],
-                   postprocessors={'GET_MANY': [get_tokens_postprocessor]})
+                   postprocessors={'GET_MANY': [get_many_tokens_postprocessor]})
 manager.create_api(NovelToken, methods=['GET', 'POST'], allow_functions=True)
 
 

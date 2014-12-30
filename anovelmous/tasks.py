@@ -1,7 +1,7 @@
 from celery import Celery
 from celery.schedules import crontab
 
-from selection import select_new_story_token
+from selection import select_new_novel_token
 from utils import get_most_recent_votes
 
 
@@ -19,5 +19,5 @@ SELECT_STORY_TOKEN_SCHEDULE = {
 
 @app.task
 def create_story_token(word_counts):
-    new_story_token = select_new_story_token(word_counts)
+    new_story_token = select_new_novel_token(word_counts)
     return new_story_token
