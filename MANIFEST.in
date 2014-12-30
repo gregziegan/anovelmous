@@ -1,0 +1,2 @@
+recursive-include anovelmous/templates *
+recursive-include anovelmous/static *

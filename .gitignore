@@ -8,3 +8,6 @@ fabfile.py
 index.py
 *.webfactional.com
 *.log
+build
+dist
+*.egg-info
