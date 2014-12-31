@@ -81,6 +81,9 @@ class Token(db.Model):
         self.is_punctuation = True if content in string.punctuation else False
         self.created_at = datetime.datetime.now()
 
+    def __str__(self):
+        return self.content
+
 
 class NovelToken(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -95,3 +98,6 @@ class NovelToken(db.Model):
         self.ordinal = ordinal
         self.chapter_id = chapter_id
         self.created_at = datetime.datetime.utcnow()
+
+    def __str__(self):
+        return self.token

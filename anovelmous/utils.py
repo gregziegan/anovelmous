@@ -1,4 +1,5 @@
 from models import NovelToken
+import nltk
 
 
 def substitute_bit_stream(result, available_tokens):
@@ -22,3 +23,15 @@ def substitute_bit_stream(result, available_tokens):
 def get_candidate_ordinal(chapter_id):
     current_novel_token = NovelToken.query.filter_by(chapter_id=chapter_id).order_by('-ordinal').first()
     return current_novel_token.ordinal + 1
+
+
+def get_preceding_tokens(chapter_id):
+    novel_tokens = NovelToken.query.filter_by(chapter_id=chapter_id).order_by('ordinal')
+
+    tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+    chapter_text = ' '.join(novel_tokens.all())
+    last_sentence = tokenizer.tokenize(chapter_text)[-1]
+
+    num_tokens = len(last_sentence.split(' '))
+    last_sentence_tokens = novel_tokens.order_by('-ordinal').all()[:num_tokens]
+    return last_sentence_tokens

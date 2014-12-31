@@ -59,7 +59,8 @@ def get_many_tokens_postprocessor(result=None, search_params=None, **kwargs):
 
     """
     if search_params.get('grammatically_correct'):
-        tokens = selection.get_grammatically_correct_subset(result['objects'])
+        most_recent_chapter_id = Chapter.query.order_by('-id').first().id
+        tokens = selection.get_grammatically_correct_subset(result['objects'], most_recent_chapter_id)
         result['objects'] = tokens
         result['num_results'] = len(tokens)
 
