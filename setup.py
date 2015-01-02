@@ -19,6 +19,7 @@ setup(
         'redis',
         'amqp',
         'requests',
-        'arrow'
+        'arrow',
+        'numpy'
     ]
 )

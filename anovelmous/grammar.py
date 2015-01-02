@@ -3,6 +3,7 @@ import nltk
 from nltk.corpus import brown
 from utils import timing
 from sqlalchemy import desc
+import numpy as np
 
 
 class GrammarFilter(object):
@@ -13,7 +14,7 @@ class GrammarFilter(object):
     def __init__(self, current_chapter_id, vocabulary=None):
         self.chapter_id = current_chapter_id
         self.vocabulary = vocabulary if vocabulary else Token.query.all()
-        self.corpus = brown.words(categories=['fiction'])
+        self.corpus = np.array(brown.sents(categories=['fiction']))
         self.tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
     @staticmethod

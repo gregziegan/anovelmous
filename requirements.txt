@@ -25,6 +25,7 @@ itsdangerous==0.24
 kombu==3.0.23
 mimerender==0.5.4
 nltk==3.0.0
+numpy==1.9.1
 paramiko==1.14.0
 psycopg2==2.5.3
 py==1.4.23
