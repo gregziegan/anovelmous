@@ -2,6 +2,7 @@ from models import NovelToken, Token
 import nltk
 from nltk.corpus import brown
 from utils import timing
+from sqlalchemy import desc
 
 
 class GrammarFilter(object):
@@ -12,7 +13,7 @@ class GrammarFilter(object):
     def __init__(self, current_chapter_id, vocabulary=None):
         self.chapter_id = current_chapter_id
         self.vocabulary = vocabulary if vocabulary else Token.query.all()
-        self.corpus = brown.words(categories=[genre for genre in brown.categories()])
+        self.corpus = brown.words(categories=['fiction'])
         self.tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
     @staticmethod
@@ -51,16 +52,19 @@ class GrammarFilter(object):
         if preceding_tokens:
             preceding_token = preceding_tokens[0]
             return [token for token in self.vocabulary
-                    if self.is_occurring_combination(self.corpus, token['token'], preceding_token)]
+                    if self.is_occurring_combination(self.corpus, token.content, preceding_token)]
         else:
             return self.vocabulary
 
     def get_preceding_tokens(self, num_of_preceding_tokens=1):
-        chapter_tokens = NovelToken.query.filter_by(chapter_id=self.chapter_id).order_by('ordinal')
-        chapter_text = ' '.join(chapter_tokens.all())
+        chapter_tokens = NovelToken.query.filter_by(chapter_id=self.chapter_id).order_by(NovelToken.ordinal)
+        chapter_token_strings = zip(*list(chapter_tokens.with_entities(NovelToken.token)))[0]
+        chapter_text = ' '.join(chapter_token_strings)
         last_sentence = self.tokenizer.tokenize(chapter_text)[-1]
 
         num_tokens = len(last_sentence.split(' '))
-        last_sentence_tokens = chapter_tokens.order_by('-ordinal').all()[:num_tokens]
+        last_sentence_tokens = NovelToken.query.filter_by(chapter_id=self.chapter_id)\
+            .order_by(desc(NovelToken.ordinal))[:num_tokens]
+
         preceding_tokens = last_sentence_tokens[:num_of_preceding_tokens]
         return preceding_tokens
