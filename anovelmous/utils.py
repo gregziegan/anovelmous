@@ -1,5 +1,5 @@
 from models import NovelToken
-import nltk
+import time
 
 
 def substitute_bit_stream(result, available_tokens):
@@ -25,13 +25,12 @@ def get_candidate_ordinal(chapter_id):
     return current_novel_token.ordinal + 1
 
 
-def get_preceding_tokens(chapter_id):
-    novel_tokens = NovelToken.query.filter_by(chapter_id=chapter_id).order_by('ordinal')
-
-    tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
-    chapter_text = ' '.join(novel_tokens.all())
-    last_sentence = tokenizer.tokenize(chapter_text)[-1]
-
-    num_tokens = len(last_sentence.split(' '))
-    last_sentence_tokens = novel_tokens.order_by('-ordinal').all()[:num_tokens]
-    return last_sentence_tokens
+def timing(f):
+    def wrap(*args):
+        time1 = time.time()
+        ret = f(*args)
+        time2 = time.time()
+        print '%s function took %0.3f seconds' % (f.func_name, (time2-time1))
+        # TODO: Eventually log this timing decorator
+        return ret
+    return wrap

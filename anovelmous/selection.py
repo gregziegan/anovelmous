@@ -1,4 +1,3 @@
-import nltk
 import arrow
 from models import NovelToken, db
 import utils
@@ -29,12 +28,3 @@ def select_new_novel_token(chapter_id):
     db.session.commit()
 
     return new_story_token
-
-
-def is_grammatically_correct(token, preceding_tokens):
-    return True
-
-
-def get_grammatically_correct_subset(tokens, chapter_id):
-    preceding_tokens = utils.get_preceding_tokens(chapter_id)
-    return [token for token in tokens if is_grammatically_correct(token['token'], preceding_tokens)]
