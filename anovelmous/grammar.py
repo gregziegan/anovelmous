@@ -4,6 +4,9 @@ from nltk.corpus import brown
 from utils import timing
 from sqlalchemy import desc
 import numpy as np
+import string
+import os.path
+import json
 
 
 class GrammarFilter(object):
@@ -11,38 +14,54 @@ class GrammarFilter(object):
     An object used to filter out all uncommon word sequences in a given chapter.
     """
 
-    def __init__(self, current_chapter_id, vocabulary=None):
+    def __init__(self, current_chapter_id, vocabulary=None, corpus=None):
         self.chapter_id = current_chapter_id
+
         self.vocabulary = vocabulary if vocabulary else Token.query.all()
-        self.corpus = np.array(brown.sents(categories=['fiction']))
+        self.vocabulary_lookup = {term.content: True for term in self.vocabulary}
         self.tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
-    @staticmethod
+        if corpus:
+            self.corpus = corpus
+            self.bigrams = self.build_vocab_targeted_bigrams()
+        elif not corpus and os.path.exists('corpora_cache/full_brown_corpus.npy')\
+                and os.path.exists('corpora_cache/full_brown_bigrams.json'):
+            self.corpus = np.load('corpora_cache/full_brown_corpus.npy')
+            with open('corpora_cache/full_brown_bigrams.json') as f:
+                self.bigrams = json.load(f)
+        else:
+            brown_text = nltk.Text(word.lower() for word in brown.words())
+            self.corpus = np.array(brown_text.tokens)
+            self.bigrams = self.build_vocab_targeted_bigrams()
+            np.save('corpora_cache/full_brown_corpus', self.corpus)
+            with open('corpora_cache/full_brown_bigrams.json', 'w') as f:
+                json.dump(self.bigrams, f)
+
     @timing
-    def is_occurring_combination(corpus, candidate_token, preceding_token):
-        """
-        A Naive algorithm that checks whether a preceding token occurs in a given text corpus.
-        :param candidate_token:
-        :param preceding_token:
-        :return:
-        """
-        match_detected = False
+    def build_vocab_targeted_bigrams(self):
+        vocab_occurrences = {vocab_term.content: {} for vocab_term in self.vocabulary}
 
-        for sentence in corpus:
-            preceding_token_encountered = False
-            for word in sentence[1:]:
-                if word == candidate_token and preceding_token_encountered:
-                    match_detected = True
-                    break
+        preceding_token = self.corpus[0]
+        encountered_punctuation = False
+        for token in self.corpus[1:]:
+            if token in string.punctuation:
+                encountered_punctuation = True
+                continue
 
-                if word == preceding_token:
-                    preceding_token_encountered = True
-                else:
-                    preceding_token_encountered = False
-            if match_detected:
-                break
+            if encountered_punctuation:
+                preceding_token = token
+                encountered_punctuation = False
+                continue
 
-        return match_detected
+            if self.vocabulary_lookup.get(token):
+                vocab_occurrences[token][preceding_token] = True
+
+            preceding_token = token
+
+        return vocab_occurrences
+
+    def is_occurring_combination(self, candidate_token, preceding_token):
+        return self.bigrams[candidate_token].get(preceding_token)
 
     def get_grammatically_correct_vocabulary_subset(self):
         """
@@ -53,7 +72,7 @@ class GrammarFilter(object):
         if preceding_tokens:
             preceding_token = preceding_tokens[0]
             return [token for token in self.vocabulary
-                    if self.is_occurring_combination(self.corpus, token.content, preceding_token)]
+                    if self.is_occurring_combination(token.content, preceding_token.token)]
         else:
             return self.vocabulary
 

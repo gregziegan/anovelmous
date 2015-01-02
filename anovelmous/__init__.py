@@ -64,16 +64,12 @@ def get_many_tokens_postprocessor(result=None, search_params=None, **kwargs):
 
     """
     if search_params.get('grammatically_correct'):
-        tokens = g.grammar_filter.get_grammatically_correct_vocabulary_subset()
-        result['objects'] = tokens
-        result['num_results'] = len(tokens)
-
-    if search_params.get('bit_stream'):
         del result['objects']
-        tokens = list(Token.query.all())
-        random.shuffle(tokens)
-        available_tokens = tokens[:100]  # TODO: temporary until grammar is built
-        utils.substitute_bit_stream(result, available_tokens)
+        result['total_pages'] = 1
+
+        tokens = g.grammar_filter.get_grammatically_correct_vocabulary_subset()
+        result['num_results'] = len(tokens)
+        utils.substitute_bit_stream(result, tokens)
 
 
 manager = flask_restless.APIManager(app, flask_sqlalchemy_db=db)
