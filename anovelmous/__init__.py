@@ -69,7 +69,11 @@ def get_many_tokens_postprocessor(result=None, search_params=None, **kwargs):
 
         tokens = g.grammar_filter.get_grammatically_correct_vocabulary_subset()
         result['num_results'] = len(tokens)
-        utils.substitute_bit_stream(result, tokens)
+
+        if search_params.get('bit_stream'):
+            utils.substitute_bit_stream(result, tokens)
+        else:
+            result['objects'] = [{'id': token.id, 'content': token.content} for token in tokens]
 
 
 manager = flask_restless.APIManager(app, flask_sqlalchemy_db=db)
