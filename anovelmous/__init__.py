@@ -1,10 +1,9 @@
-from flask import Flask, url_for, redirect, g, abort, render_template, request, jsonify
+from flask import Flask, g, render_template, request, jsonify
 import flask_restless
 from models import db, Novel, Chapter, Vote, NovelToken, User, Token
 import selection
 from grammar import GrammarFilter
 import utils
-import random
 import pkg_resources
 
 VERSION = pkg_resources.require('anovelmous')[0].version
@@ -21,7 +20,6 @@ def initialize_database():
     most_recent_chapter_id = Chapter.query.order_by('-id').first().id
     gf = GrammarFilter(current_chapter_id=most_recent_chapter_id)
     g.grammar_filter = gf
-
 
 
 @app.route('/')
@@ -55,14 +53,7 @@ def vote(novel_id):
     return jsonify(message="Successfully voted!")
 
 
-def get_many_tokens_postprocessor(result=None, search_params=None, **kwargs):
-    """Accepts two arguments, `result`, which is the dictionary
-    representation of the JSON response which will be returned to the
-    client, and `search_params`, which is a dictionary containing the
-    search parameters for the request (that produced the specified
-    `result`).
-
-    """
+def get_many_tokens_postprocessor(result=None, search_params=None):
     if search_params.get('grammatically_correct'):
         del result['objects']
         result['total_pages'] = 1

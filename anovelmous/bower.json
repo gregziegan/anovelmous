@@ -4,7 +4,7 @@
   "dependencies": {
     "foundation": "~5.5.0",
     "ember": "~1.9.1",
-    "ember-data": "~0.0.14",
+    "ember-data": "beta",
     "jquery-ui": "~1.11.2",
     "foundation-icons": "*"
   }

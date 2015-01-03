@@ -36,7 +36,7 @@ If you would wish to work on the production product, use the requirements.txt
     
 Make sure to be in a virtualenv to guarantee a clean installation.
 
-Then, follow the instructions concerning the configuration file stated [above](#Installation).
+Then, follow the instructions concerning the configuration file stated [above](#installation).
 
 #### Note:
 

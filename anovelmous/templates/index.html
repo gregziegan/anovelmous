@@ -7,69 +7,72 @@
 {% endblock %}
 
 {% block content %}
-<div class="large-12 medium-12 small-12 columns">
-  <div class="off-canvas-wrap" data-offcanvas>
-    <div class="inner-wrap">
-      <nav class="tab-bar">
-        <section class="left-small">
-          <a class="left-off-canvas-toggle menu-icon" href="#"><span></span></a>
-        </section>
-        <section class="middle tab-bar-section">
-          <h1 class="title">Anovelmous</h1>
-        </section>
-      </nav>
+<script type="text/x-handlebars" data-template-name="read">
 
-      <aside class="left-off-canvas-menu">
-        <ul class="off-canvas-list">
-          <li><label>Let's write together.</label></li>
-          <li><a href="#">Contribute <i class="fi-page-edit"></i></a></li>
-          <li class="has-submenu"><a href="#">Table of Contents<i class="fi-book"></i></a>
-            <ul class="left-submenu">
-              <li class="back"><a href="#">Back</a></li>
-              {% for chapter in novel_chapters %}
-                <li><a href="#">{{ chapter.name }}</a></li>
-              {% endfor %}
-            </ul>
-          </li>
-          <li class="has-submenu"><a href="#">Account</a>
-            <ul class="left-submenu">
-              <li class="back"><a href="#">Back</a></li>
-              <li><a href="#">Stats</a></li>
-              <li><a href="#">Settings</a></li>
-            </ul>
-          </li>
-          <li><a href="#">Archive<i class="fi-torso"></i></a></li>
-        </ul>
-      </aside>
+  <div class="large-12 medium-12 small-12 columns">
+    <div class="off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+        <nav class="tab-bar">
+          <section class="left-small">
+            <a class="left-off-canvas-toggle menu-icon" href="#"><span></span></a>
+          </section>
+          <section class="middle tab-bar-section">
+            <h1 class="title">Anovelmous</h1>
+          </section>
+        </nav>
 
-      <section class="main-section">
-        {% if current_chapter_tokens %}
-          <p>
-        {% for story_token in current_chapter_tokens %}
-          {{ story_token.token }}
-        {% endfor %}
-          </p>
-        {% endif %}
-        <div class="large-10 medium-10 small-8 columns">
-          <div class="row">
-            <form id="vote-form" method="post" action="{{ url_for('vote', novel_id=current_novel.id) }}">
-              <label for="vote">Vote: </label>
-              <input id="vote" type="text" name="vote">
-            </form>
+        <aside class="left-off-canvas-menu">
+          <ul class="off-canvas-list">
+            <li><label>Let's write together.</label></li>
+            <li><a href="#">Contribute <i class="fi-page-edit"></i></a></li>
+            <li class="has-submenu"><a href="#">Table of Contents<i class="fi-book"></i></a>
+              <ul class="left-submenu">
+                <li class="back"><a href="#">Back</a></li>
+                {% for chapter in novel_chapters %}
+                  <li><a href="#">{{ chapter.name }}</a></li>
+                {% endfor %}
+              </ul>
+            </li>
+            <li class="has-submenu"><a href="#">Account</a>
+              <ul class="left-submenu">
+                <li class="back"><a href="#">Back</a></li>
+                <li><a href="#">Stats</a></li>
+                <li><a href="#">Settings</a></li>
+              </ul>
+            </li>
+            <li><a href="#">Archive<i class="fi-torso"></i></a></li>
+          </ul>
+        </aside>
+
+        <section class="main-section">
+          {% if current_chapter_tokens %}
+            <p>
+          {% for story_token in current_chapter_tokens %}
+            {{ story_token.token }}
+          {% endfor %}
+            </p>
+          {% endif %}
+          <div class="large-10 medium-10 small-8 columns">
+            <div class="row">
+              <form id="vote-form" method="post" action="{{ url_for('vote', novel_id=current_novel.id) }}">
+                <label for="vote">Vote: </label>
+                <input id="vote" type="text" name="vote">
+              </form>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-    <a class="exit-off-canvas"></a>
+      <a class="exit-off-canvas"></a>
 
+      </div>
     </div>
   </div>
-</div>
-
+</script>
 {% endblock %}
 
 {% block javascript %}
-<script type="text/javascript">
+
+<!--<script type="text/javascript">
 
   $(document).ready(function () {
     $('.ui-autocomplete').addClass('f-dropdown');
@@ -108,5 +111,5 @@
       }
     });
   }
-</script>
+</script>-->
 {% endblock %}
