@@ -74,7 +74,7 @@ manager.create_api(User, primary_key='username', exclude_columns=['is_active', '
 manager.create_api(Vote, methods=['GET', 'POST'])
 manager.create_api(Token, methods=['GET', 'POST'], exclude_columns=['created_at', 'index'],
                    postprocessors={'GET_MANY': [get_many_tokens_postprocessor]})
-manager.create_api(NovelToken, methods=['GET', 'POST'], allow_functions=True)
+manager.create_api(NovelToken, methods=['GET', 'POST'], exclude_columns=['chapter', 'chapter_id'], allow_functions=True)
 
 
 @app.route('/api/bulk-add-to-vocabulary', methods=['POST'])

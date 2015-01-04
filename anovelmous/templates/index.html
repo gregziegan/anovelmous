@@ -1,78 +1,91 @@
-{% extends 'layout.html' %}
+<html>
+  <head>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='bower_components/foundation/css/foundation.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet"
+          href="{{ url_for('static',
+          filename='bower_components/foundation-icons/foundation_icons_general/stylesheets/general_foundicons.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='bower_components/jquery-ui/themes/mint-choc/jquery-ui.css') }}">
+    <title>Anovelmous</title>
+    <style type="text/css">
+      .ui-helper-hidden-accessible{display:none}
+    </style>
+  </head>
+  <body>
 
-{% block css %}
-<style type="text/css">
-.ui-helper-hidden-accessible{display:none}
-</style>
-{% endblock %}
+  {% raw %}
+  <script type="text/x-handlebars">
 
-{% block content %}
-<script type="text/x-handlebars" data-template-name="read">
+    <div class="large-12 medium-12 small-12 columns">
+      <div class="off-canvas-wrap" data-offcanvas>
+        <div class="inner-wrap">
+          <nav class="tab-bar">
+            <section class="left-small">
+              <a href="#" class="left-off-canvas-toggle menu-icon"><span></span></a>
+            </section>
+            <section class="middle tab-bar-section">
+              <h1 class="title">Anovelmous</h1>
+            </section>
+          </nav>
 
-  <div class="large-12 medium-12 small-12 columns">
-    <div class="off-canvas-wrap" data-offcanvas>
-      <div class="inner-wrap">
-        <nav class="tab-bar">
-          <section class="left-small">
-            <a class="left-off-canvas-toggle menu-icon" href="#"><span></span></a>
+          <aside class="left-off-canvas-menu">
+            {{partial "sidebar"}}
+          </aside>
+
+          <section class="main-section">
+            {{outlet}}
           </section>
-          <section class="middle tab-bar-section">
-            <h1 class="title">Anovelmous</h1>
-          </section>
-        </nav>
 
-        <aside class="left-off-canvas-menu">
-          <ul class="off-canvas-list">
-            <li><label>Let's write together.</label></li>
-            <li><a href="#">Contribute <i class="fi-page-edit"></i></a></li>
-            <li class="has-submenu"><a href="#">Table of Contents<i class="fi-book"></i></a>
-              <ul class="left-submenu">
-                <li class="back"><a href="#">Back</a></li>
-                {% for chapter in novel_chapters %}
-                  <li><a href="#">{{ chapter.name }}</a></li>
-                {% endfor %}
-              </ul>
-            </li>
-            <li class="has-submenu"><a href="#">Account</a>
-              <ul class="left-submenu">
-                <li class="back"><a href="#">Back</a></li>
-                <li><a href="#">Stats</a></li>
-                <li><a href="#">Settings</a></li>
-              </ul>
-            </li>
-            <li><a href="#">Archive<i class="fi-torso"></i></a></li>
-          </ul>
-        </aside>
-
-        <section class="main-section">
-          {% if current_chapter_tokens %}
-            <p>
-          {% for story_token in current_chapter_tokens %}
-            {{ story_token.token }}
-          {% endfor %}
-            </p>
-          {% endif %}
-          <div class="large-10 medium-10 small-8 columns">
-            <div class="row">
-              <form id="vote-form" method="post" action="{{ url_for('vote', novel_id=current_novel.id) }}">
-                <label for="vote">Vote: </label>
-                <input id="vote" type="text" name="vote">
-              </form>
-            </div>
-          </div>
-        </section>
-
-      <a class="exit-off-canvas"></a>
-
+          <a class="exit-off-canvas"></a>
+        </div>
       </div>
     </div>
-  </div>
-</script>
-{% endblock %}
+  </script>
 
-{% block javascript %}
+  <script type="text/x-handlebars" data-template-name="sidebar">
+    <ul class="off-canvas-list">
+      <li><label>Let's write together.</label></li>
+      <li><a href="#">Contribute <i class="fi-page-edit"></i></a></li>
+      <li class="has-submenu"><a href="#">Table of Contents<i class="fi-book"></i></a>
+        <ul class="left-submenu">
+          <li class="back"><a href="#">Back</a></li>
+        </ul>
+      </li>
+      <li class="has-submenu"><a href="#">Account</a>
+        <ul class="left-submenu">
+          <li class="back"><a href="#">Back</a></li>
+          <li><a href="#">Stats</a></li>
+          <li><a href="#">Settings</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Archive<i class="fi-torso"></i></a></li>
+    </ul>
+  </script>
 
-<!--<script type="text/javascript">
+  <script type="text/x-handlebars" data-template-name="read">
+    {{outlet}}
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="read/live">
+    {{#each}}
+    <p>{{text}}</p>
+    {{/each}}
+    <div class="large-10 medium-10 small-8 columns">
+      <div class="row">
+        <form id="vote-form" method="post">
+          <label for="vote">Vote: </label>
+          <input id="vote" type="text" name="vote">
+        </form>
+      </div>
+    </div>
+  </script>
+
+  {% endraw %}
+
+  <!--<script type="text/javascript">
 
   $(document).ready(function () {
     $('.ui-autocomplete').addClass('f-dropdown');
@@ -112,4 +125,26 @@
     });
   }
 </script>-->
-{% endblock %}
+
+
+  <script type="text/javascript"
+          src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
+  <script type="text/javascript"
+          src="{{ url_for('static', filename='bower_components/foundation/js/foundation.min.js') }}"></script>
+  <script type="text/javascript"
+          src="{{ url_for('static', filename='bower_components/foundation/js/foundation/foundation.offcanvas.js') }}"></script>
+  <script type="text/javascript"
+          src="{{ url_for('static', filename='bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
+  <script type="text/javascript"
+          src="{{ url_for('static', filename='bower_components/handlebars/handlebars.min.js') }}"></script>
+  <script type="text/javascript"
+          src="{{ url_for('static', filename='bower_components/ember/ember.js') }}"></script>
+  <script type="text/javascript"
+          src="{{ url_for('static', filename='bower_components/ember-data/ember-data.js') }}"></script>
+  <script type="text/javascript">
+  </script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/router.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/models/live_stream.js') }}"></script>
+  </body>
+</html>
