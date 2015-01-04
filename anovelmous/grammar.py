@@ -21,20 +21,23 @@ class GrammarFilter(object):
         self.vocabulary_lookup = {term.content: True for term in self.vocabulary}
         self.tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
+        full_brown_corpus_file_path = os.path.join(os.path.dirname(__file__), 'corpora_cache/full_brown_corpus.npy')
+        full_brown_bigrams_file_path = os.path.join(os.path.dirname(__file__), 'corpora_cache/full_brown_bigrams.json')
         if corpus:
             self.corpus = corpus
             self.bigrams = self.build_vocab_targeted_bigrams()
-        elif not corpus and os.path.exists('corpora_cache/full_brown_corpus.npy')\
-                and os.path.exists('corpora_cache/full_brown_bigrams.json'):
-            self.corpus = np.load('corpora_cache/full_brown_corpus.npy')
-            with open('corpora_cache/full_brown_bigrams.json') as f:
+        elif not corpus \
+                and os.path.exists(full_brown_corpus_file_path)\
+                and os.path.exists(full_brown_bigrams_file_path):
+            self.corpus = np.load(full_brown_corpus_file_path)
+            with open(full_brown_bigrams_file_path) as f:
                 self.bigrams = json.load(f)
         else:
             brown_text = nltk.Text(word.lower() for word in brown.words())
             self.corpus = np.array(brown_text.tokens)
             self.bigrams = self.build_vocab_targeted_bigrams()
-            np.save('corpora_cache/full_brown_corpus', self.corpus)
-            with open('corpora_cache/full_brown_bigrams.json', 'w') as f:
+            np.save(full_brown_corpus_file_path, self.corpus)
+            with open(full_brown_bigrams_file_path, 'w') as f:
                 json.dump(self.bigrams, f)
 
     @timing

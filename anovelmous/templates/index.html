@@ -1,112 +1,20 @@
-{% extends 'layout.html' %}
+<html>
+  <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.min.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fonts/foundation-icons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui.min.css') }}">
+    <title>{% block title %}Anovelmous{% endblock %}</title>
+  </head>
+  <body>
+  <p>Welcome to Anovelmous!</p>
 
-{% block css %}
-<style type="text/css">
-.ui-helper-hidden-accessible{display:none}
-</style>
-{% endblock %}
-
-{% block content %}
-<div class="large-12 medium-12 small-12 columns">
-  <div class="off-canvas-wrap" data-offcanvas>
-    <div class="inner-wrap">
-      <nav class="tab-bar">
-        <section class="left-small">
-          <a class="left-off-canvas-toggle menu-icon" href="#"><span></span></a>
-        </section>
-        <section class="middle tab-bar-section">
-          <h1 class="title">Anovelmous</h1>
-        </section>
-      </nav>
-
-      <aside class="left-off-canvas-menu">
-        <ul class="off-canvas-list">
-          <li><label>Let's write together.</label></li>
-          <li><a href="#">Contribute <i class="fi-page-edit"></i></a></li>
-          <li class="has-submenu"><a href="#">Table of Contents<i class="fi-book"></i></a>
-            <ul class="left-submenu">
-              <li class="back"><a href="#">Back</a></li>
-              {% for chapter in novel_chapters %}
-                <li><a href="#">{{ chapter.name }}</a></li>
-              {% endfor %}
-            </ul>
-          </li>
-          <li class="has-submenu"><a href="#">Account</a>
-            <ul class="left-submenu">
-              <li class="back"><a href="#">Back</a></li>
-              <li><a href="#">Stats</a></li>
-              <li><a href="#">Settings</a></li>
-            </ul>
-          </li>
-          <li><a href="#">Archive<i class="fi-torso"></i></a></li>
-        </ul>
-      </aside>
-
-      <section class="main-section">
-        {% if current_chapter_tokens %}
-          <p>
-        {% for story_token in current_chapter_tokens %}
-          {{ story_token.token }}
-        {% endfor %}
-          </p>
-        {% endif %}
-        <div class="large-10 medium-10 small-8 columns">
-          <div class="row">
-            <form id="vote-form" method="post" action="{{ url_for('vote', novel_id=current_novel.id) }}">
-              <label for="vote">Vote: </label>
-              <input id="vote" type="text" name="vote">
-            </form>
-          </div>
-        </div>
-      </section>
-
-    <a class="exit-off-canvas"></a>
-
-    </div>
-  </div>
-</div>
-
-{% endblock %}
-
-{% block javascript %}
-<script type="text/javascript">
-
-  $(document).ready(function () {
-    $('.ui-autocomplete').addClass('f-dropdown');
-    var full_vocabulary = {{ full_vocabulary|tojson|safe }};
-    populate_suggestions(full_vocabulary);
-    register_vote_submission_event();
-  });
-
-  function register_vote_submission_event() {
-    $('#vote-form').submit(function (e) {
-      e.preventDefault();
-      $.ajax({
-        url: $(this).attr('action'),
-        type: 'POST',
-        data: {
-          'token': $('#vote').val()
-        }
-      }).success(function (res) {
-        console.log(res.message);
-      });
-      return false;
-    });
-  }
-
-  function check_for_new_vote_suggestions() {
-    $.getJSON('api/token?').done(function (available_tokens) {
-      populate_suggestions(available_tokens)
-    });
-  }
-
-  function populate_suggestions(available_tokens) {
-    $('#vote').autocomplete({
-      source: function(request, response) {
-        var results = $.ui.autocomplete.filter(available_tokens, request.term);
-        response(results.slice(0,10))
-      }
-    });
-  }
-</script>
-{% endblock %}
+  <script type="text/javascript" src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
+  <script type="text/javascript">
+    $(document).foundation();
+  </script>
+  </body>
+</html>

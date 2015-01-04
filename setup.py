@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='anovelmous',
-    version='0.1.0',
+    version='0.2.0',
     packages=find_packages(),
     include_package_data=True,
     url='http://anovelmous.com',
@@ -15,11 +15,13 @@ setup(
         'sqlalchemy',
         'flask-restless',
         'flask-sqlalchemy',
+        'flask-user',
         'nltk',
         'redis',
         'amqp',
         'requests',
         'arrow',
-        'numpy'
+        'numpy',
+        'sqlalchemy-utils'
     ]
 )
