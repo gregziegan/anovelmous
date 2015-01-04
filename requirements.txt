@@ -3,12 +3,15 @@ Flask==0.10.1
 Flask-ErrorMail==0.2.2
 Flask-Login==0.2.11
 Flask-Mail==0.9.0
+Flask-Migrate==1.3.0
 Flask-Restless==0.14.0
 Flask-SQLAlchemy==1.0
+Flask-Script==2.0.5
 Flask-Testing==0.4.2
 Flask-User==0.6.1
 Flask-WTF==0.10.3
 Jinja2==2.7.3
+Mako==1.0.0
 MarkupSafe==0.23
 Pygments==1.6
 SQLAlchemy==0.9.7
@@ -16,6 +19,7 @@ SQLAlchemy-Utils==0.29.1
 Sphinx==1.2.3
 WTForms==2.0.1
 Werkzeug==0.9.6
+alembic==0.7.3
 amqp==1.4.6
 anyjson==0.3.3
 argparse==1.2.1

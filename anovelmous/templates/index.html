@@ -89,7 +89,6 @@
 
   $(document).ready(function () {
     $('.ui-autocomplete').addClass('f-dropdown');
-    var full_vocabulary = {{ full_vocabulary|tojson|safe }};
     populate_suggestions(full_vocabulary);
     register_vote_submission_event();
   });

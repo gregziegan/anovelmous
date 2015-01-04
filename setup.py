@@ -13,6 +13,7 @@ setup(
     install_requires=[
         'flask',
         'sqlalchemy',
+        'flask-migrate',
         'flask-restless',
         'flask-sqlalchemy',
         'flask-user',

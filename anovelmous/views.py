@@ -7,7 +7,6 @@ import utils
 
 @app.before_first_request
 def initialize_database():
-    db.create_all()
     most_recent_chapter = Chapter.query.order_by('-id').first()
     if most_recent_chapter:
         most_recent_chapter_id = most_recent_chapter.id
