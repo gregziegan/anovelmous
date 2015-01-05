@@ -1,5 +1,8 @@
 from models import NovelToken
 import time
+import requests
+import os
+import string
 
 
 def substitute_bit_stream(result, available_tokens):
@@ -34,3 +37,21 @@ def timing(f):
         # TODO: Eventually log this timing decorator
         return ret
     return wrap
+
+
+def is_allowed_punctuation(symbol):
+    if symbol in '!"$%&\'(),.:;?':
+        return True
+    return False
+
+
+def add_initial_vocabulary(host):
+    with open(os.path.join(os.path.dirname(__file__), 'data/google-10000-english/google-10000-english.txt')) as f:
+        vocabulary = f.read().splitlines()
+
+    for symbol in string.punctuation:
+        if is_allowed_punctuation(symbol):
+            vocabulary.append(symbol)
+
+    url = 'http://{host}/api/bulk-add-to-vocabulary'.format(host=host)
+    requests.post(url, json={'words': vocabulary})

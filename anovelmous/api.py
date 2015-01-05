@@ -1,8 +1,23 @@
+import arrow
 from anovelmous import app, db, VERSION
 from flask import request, jsonify, g
+from flask.json import JSONEncoder
 import flask_restless
 from models import NovelToken, Novel, Vote, Token, Chapter, FormattedNovelToken
 import utils
+
+
+class ArrowJSONEncoder(JSONEncoder):
+    def default(self, obj):
+        try:
+            if isinstance(obj, arrow.Arrow):
+                return obj.format('YYYY-MM-DD HH:mm:ss ZZ')
+            iterable = iter(obj)
+        except TypeError:
+            pass
+        else:
+            return list(iterable)
+        return JSONEncoder.default(self, obj)
 
 
 def get_many_tokens_postprocessor(result=None, search_params=None, **kwargs):
@@ -26,6 +41,7 @@ def get_many_tokens_postprocessor(result=None, search_params=None, **kwargs):
             result['objects'] = [{'id': token.id, 'content': token.content} for token in tokens]
 
 
+app.json_encoder = ArrowJSONEncoder
 manager = flask_restless.APIManager(app, flask_sqlalchemy_db=db)
 manager.create_api(Novel, methods=['GET', 'POST'])
 manager.create_api(Chapter, methods=['GET', 'POST'], exclude_columns=['content'])

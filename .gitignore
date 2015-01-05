@@ -11,3 +11,6 @@ index.py
 build
 dist
 *.egg-info
+*.npy
+.ipynb_checkpoints
+*.ipynb
