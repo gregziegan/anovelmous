@@ -1,6 +1,7 @@
 import arrow
 from models import NovelToken, db
 import utils
+import formatting
 
 
 def select_new_novel_token(chapter_id):
@@ -18,13 +19,16 @@ def select_new_novel_token(chapter_id):
     result = db.engine.execute(query)
     most_popular_vote = result[0]
 
-    new_story_token = NovelToken(
+    new_novel_token = NovelToken(
         token=most_popular_vote.token,
         ordinal=utils.get_candidate_ordinal(chapter_id),
         chapter_id=chapter_id
     )
 
-    db.session.add(new_story_token)
+    db.session.add(new_novel_token)
     db.session.commit()
 
-    return new_story_token
+    formatted_tokens = formatting.get_formatted_tokens(new_novel_token)
+    formatting.update_formatted_novel_tokens(new_novel_token)
+
+    return new_novel_token

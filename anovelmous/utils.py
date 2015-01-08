@@ -1,4 +1,4 @@
-from models import NovelToken
+from models import NovelToken, Token
 import time
 import requests
 import os
@@ -55,3 +55,10 @@ def add_initial_vocabulary(host):
 
     url = 'http://{host}/api/bulk-add-to-vocabulary'.format(host=host)
     requests.post(url, json={'words': vocabulary})
+
+
+def is_valid_vocabulary_word(token):
+    valid_token = Token.query.filter_by(content=token).first()
+    if valid_token:
+        return True
+    return False
