@@ -11,7 +11,8 @@ setup(
     author_email='greg.ziegan@gmail.com, jmmaroli@aol.com',
     description='Let\'s write together.',
     install_requires=[
-        'flask',
+        'flask>=0.10.1',
+        'Werkzeug>=0.9.5',
         'sqlalchemy',
         'flask-migrate',
         'flask-restless',
