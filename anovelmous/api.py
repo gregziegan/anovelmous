@@ -54,6 +54,7 @@ manager.create_api(FormattedNovelToken, methods=['GET', 'POST'])
 
 @app.route('/api/bulk-add-to-vocabulary', methods=['POST'])
 def add_to_vocabulary():
+    print 'adding to bulk vocab'
     words = request.json['words']
     words = [word.lower() for word in words]
 

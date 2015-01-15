@@ -3,6 +3,7 @@ import time
 import requests
 import os
 import string
+import random
 
 
 def substitute_bit_stream(result, available_tokens):
@@ -45,16 +46,22 @@ def is_allowed_punctuation(symbol):
     return False
 
 
-def add_initial_vocabulary(host):
+def add_initial_vocabulary(host, word_cap=None):
     with open(os.path.join(os.path.dirname(__file__), 'data/google-10000-english/google-10000-english.txt')) as f:
         vocabulary = f.read().splitlines()
+
+    if word_cap:
+        random.shuffle(vocabulary)
+        vocabulary = vocabulary[:word_cap]
 
     for symbol in string.punctuation:
         if is_allowed_punctuation(symbol):
             vocabulary.append(symbol)
 
     url = 'http://{host}/api/bulk-add-to-vocabulary'.format(host=host)
-    requests.post(url, json={'words': vocabulary})
+    r = requests.post(url, json={'words': vocabulary})
+    print r.status
+    print r.text
 
 
 def is_valid_vocabulary_word(token):
