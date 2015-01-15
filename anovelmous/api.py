@@ -1,5 +1,5 @@
 import arrow
-from anovelmous import app, db, VERSION
+from anovelmous import app, db
 from flask import request, jsonify, g
 from flask.json import JSONEncoder
 import flask_restless
@@ -66,8 +66,3 @@ def add_to_vocabulary():
 
     db.session.commit()
     return jsonify({'message': "All words added successfully."})
-
-
-@app.route('/api/metadata')
-def get_api_metadata():
-    return jsonify({'version': VERSION})

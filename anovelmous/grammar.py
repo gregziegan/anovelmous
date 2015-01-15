@@ -21,10 +21,13 @@ class GrammarFilter(object):
         self.vocabulary_lookup = {term.content: True for term in self.vocabulary}
         self.tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
-        full_brown_corpus_file_path = os.path.join(os.path.dirname(__file__),
-                                                   'data/corpora_cache/full_brown_corpus.npy')
-        full_brown_bigrams_file_path = os.path.join(os.path.dirname(__file__),
-                                                    'data/corpora_cache/full_brown_bigrams.json')
+        corpora_cache_fp = os.path.join(os.path.dirname(__file__), 'data/corpora_cache')
+        if not os.path.exists(corpora_cache_fp):
+            os.makedirs(corpora_cache_fp)
+
+        full_brown_corpus_file_path = os.path.join(corpora_cache_fp, 'full_brown_corpus.npy')
+        full_brown_bigrams_file_path = os.path.join(corpora_cache_fp, 'full_brown_bigrams.json')
+
         if corpus:
             self.corpus = corpus
             self.bigrams = self.build_vocab_targeted_bigrams()

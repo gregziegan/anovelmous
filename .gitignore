@@ -14,3 +14,4 @@ dist
 *.npy
 .ipynb_checkpoints
 *.ipynb
+.env

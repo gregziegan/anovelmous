@@ -1,11 +1,11 @@
 from flask import Flask
 from models import db
-import pkg_resources
-
-VERSION = pkg_resources.require('anovelmous')[0].version
+import os
 
 app = Flask(__name__)
-app.config.from_envvar("ANOVELMOUS_SETTINGS")
+app.config['DEBUG'] = os.environ.get('DEBUG', False)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+app.config['SECRET_KEY'] = os.environ.get('ANOVELMOUS_SECRET_KEY', 'development')
 db.init_app(app)
 
 import anovelmous.views
