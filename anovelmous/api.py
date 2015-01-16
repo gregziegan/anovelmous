@@ -46,7 +46,7 @@ manager = flask_restless.APIManager(app, flask_sqlalchemy_db=db)
 manager.create_api(Novel, methods=['GET', 'POST'])
 manager.create_api(Chapter, methods=['GET', 'POST'], exclude_columns=['content'])
 manager.create_api(Vote, methods=['GET', 'POST'])
-manager.create_api(Token, methods=['GET', 'POST'], exclude_columns=['created_at', 'index'],
+manager.create_api(Token, primary_key='content', methods=['GET', 'POST'], exclude_columns=['created_at', 'index'],
                    postprocessors={'GET_MANY': [get_many_tokens_postprocessor]})
 manager.create_api(NovelToken, methods=['GET', 'POST'], allow_functions=True)
 manager.create_api(FormattedNovelToken, methods=['GET', 'POST'])

@@ -59,9 +59,7 @@ def add_initial_vocabulary(host, word_cap=None):
             vocabulary.append(symbol)
 
     url = 'http://{host}/api/bulk-add-to-vocabulary'.format(host=host)
-    r = requests.post(url, json={'words': vocabulary})
-    print r.status
-    print r.text
+    requests.post(url, json={'words': vocabulary})
 
 
 def is_valid_vocabulary_word(token):
